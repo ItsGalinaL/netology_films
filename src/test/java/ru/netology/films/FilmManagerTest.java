@@ -2,6 +2,7 @@ package ru.netology.films;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FilmManagerTest {
@@ -15,45 +16,62 @@ class FilmManagerTest {
     }
 
     @Test
-    void testLimit() {
+    void testFindAll() {
+        String[] expected = new String[3];
+        expected[0] = "Берегись автомобиля";
+        expected[1] = "Бриллиантовая рука";
+        expected[2] = "Кавказская пленница";
+        FilmManager filmManager = new FilmManager();
+        filmManager.addFilm(expected[0]);
+        filmManager.addFilm(expected[1]);
+        filmManager.addFilm(expected[2]);
+
+        assertArrayEquals(expected, filmManager.findAll());
+    }
+
+    @Test
+    void testLimitEquals() {
+        String[] expected = new String[3];
+        expected[0] = "Берегись автомобиля";
+        expected[1] = "Бриллиантовая рука";
+        expected[2] = "Кавказская пленница";
         FilmManager filmManager = new FilmManager(3);
+        filmManager.addFilm(expected[2]);
+        filmManager.addFilm(expected[1]);
+        filmManager.addFilm(expected[0]);
 
-        String f1 = "Берегись автомобиля";
-        filmManager.addFilm(f1);
-
-        String f2 = "Бриллиантовая рука";
-        filmManager.addFilm(f2);
-
-        String f3 = "Кавказская пленница";
-        filmManager.addFilm(f3);
-
-        assertEquals(3, filmManager.findAll().length);
-        assertEquals(f1, filmManager.findAll()[0]);
-        assertEquals(f2, filmManager.findAll()[1]);
-        assertEquals(f3, filmManager.findAll()[2]);
-
-        assertEquals(3, filmManager.findLast().length);
-        assertEquals(f3, filmManager.findLast()[0]);
-        assertEquals(f2, filmManager.findLast()[1]);
-        assertEquals(f1, filmManager.findLast()[2]);
+        assertArrayEquals(expected, filmManager.findLast());
     }
 
 
     @Test
-    void testOverLimit() {
+    void testLimitExceeded() {
+        String[] expected = new String[2];
+        expected[0] = "Бриллиантовая рука";
+        expected[1] = "Кавказская пленница";
         FilmManager filmManager = new FilmManager(2);
+        filmManager.addFilm("Берегись автомобиля");
+        filmManager.addFilm(expected[1]);
+        filmManager.addFilm(expected[0]);
 
-        String f1 = "Берегись автомобиля";
-        filmManager.addFilm(f1);
+        String[] actual = filmManager.findLast();
 
-        String f2 = "Бриллиантовая рука";
-        filmManager.addFilm(f2);
+        assertArrayEquals(expected, actual);
+    }
 
-        String f3 = "Кавказская пленница";
-        filmManager.addFilm(f3);
+    @Test
+    void testLimitLower() {
+        String[] expected = new String[3];
+        expected[0] = "Берегись автомобиля";
+        expected[1] = "Бриллиантовая рука";
+        expected[2] = "Кавказская пленница";
+        FilmManager filmManager = new FilmManager(10);
+        filmManager.addFilm(expected[2]);
+        filmManager.addFilm(expected[1]);
+        filmManager.addFilm(expected[0]);
 
-        assertEquals(2, filmManager.findLast().length);
-        assertEquals(f3, filmManager.findLast()[0]);
-        assertEquals(f2, filmManager.findLast()[1]);
+        String[] actual = filmManager.findLast();
+
+        assertArrayEquals(expected, actual);
     }
 }
